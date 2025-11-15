@@ -1,0 +1,78 @@
+cpp-/
+
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int n = s.size();
+        const int B = 200; // sqrt(4e4) ~ 200
+
+        // positions of zeros with sentinels
+        vector<int> pos;
+        pos.push_back(-1);
+        for (int i = 0; i < n; ++i) if (s[i] == '0') pos.push_back(i);
+        pos.push_back(n);
+
+        int m = (int)pos.size() - 2; // number of zeros
+        long long ans = 0;
+
+        // Case z = 0 : substrings made of only ones
+        for (int i = 1; i < (int)pos.size(); ++i) {
+            long long len = pos[i] - pos[i-1] - 1;
+            ans += len * (len + 1) / 2;
+        }
+
+        // Case 1 <= z <= B
+        for (int z = 1; z <= B && z <= m; ++z) {
+            long long need = 1LL * z * z + z; // minimal length required
+            for (int a = 1; a + z - 1 <= m; ++a) {
+                int b = a + z - 1;
+                long long leftChoices  = pos[a] - pos[a-1];   // how many possible L positions
+                long long rightChoices = pos[b+1] - pos[b];   // how many possible R positions
+                long long base = pos[b] - pos[a] + 1;         // current length covering zeros from pos[a]..pos[b]
+
+                long long t = need - base; // we require l_off + r_off >= t, where l_off in [0,leftChoices-1], r_off in [0,rightChoices-1]
+                if (t <= 0) {
+                    // all pairs valid
+                    ans += leftChoices * rightChoices;
+                    continue;
+                }
+
+                // If t > leftChoices-1 + rightChoices-1 then no pairs possible
+                if (t > (leftChoices - 1) + (rightChoices - 1)) continue;
+
+                // Count number of (l_off, r_off) with 0 <= l_off < leftChoices, 0 <= r_off < rightChoices and l_off + r_off >= t
+                // total pairs minus pairs with sum <= t-1
+                long long A = leftChoices, Bc = rightChoices;
+                long long totalPairs = A * Bc;
+
+                // count pairs with sum <= T where T = t-1
+                long long T = t - 1;
+                long long cnt_le = 0;
+                // split ranges for efficient sum:
+                // for l from 0..A-1:
+                //    add min(Bc, T - l + 1) clipped to [0, Bc]
+                // we compute by ranges:
+                long long L1 = max(0LL, T - (Bc - 1)); // smallest l where min(Bc, T-l+1) > 0
+                long long L2 = min(A - 1, T);         // largest l where T - l + 1 >= 1
+                if (L1 <= L2) {
+                    // for l in [L1..L2], value = (T - l + 1) which is arithmetic decreasing
+                    long long cntL = (L2 - L1 + 1);
+                    long long first = T - L1 + 1;
+                    long long last  = T - L2 + 1;
+                    cnt_le += (first + last) * cntL / 2;
+                }
+                // for l < L1, min(Bc, T-l+1) >= Bc (capped)
+                if (L1 > 0) {
+                    long long cnt_full = min(A, L1);
+                    cnt_le += cnt_full * Bc;
+                }
+                // ensure we don't exceed totalPairs
+                if (cnt_le > totalPairs) cnt_le = totalPairs;
+
+                ans += (totalPairs - cnt_le);
+            }
+        }
+
+        return (int)ans;
+    }
+};
