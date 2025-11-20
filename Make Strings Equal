@@ -1,0 +1,43 @@
+GFG POTD 20/11/2025
+
+cpp-/
+
+class Solution {
+public:
+    int minCost(string &s, string &t, vector<vector<char>> &transform, vector<int> &cost) {
+        int n = s.size();
+        const int INF = 1e9;
+        vector<vector<int>> dp(26, vector<int>(26, INF));
+        
+        for(int i = 0; i < 26; i++) dp[i][i] = 0;
+        
+        for(int i = 0; i < transform.size(); i++){
+            int u = transform[i][0] - 'a';
+            int v = transform[i][1] - 'a';
+            dp[u][v] = min(dp[u][v], cost[i]);
+        }
+        
+        for(int k = 0; k < 26; k++){
+            for(int i = 0; i < 26; i++){
+                for(int j = 0; j < 26; j++){
+                    if(dp[i][k] < INF && dp[k][j] < INF)
+                        dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j]);
+                }
+            }
+        }
+        
+        int totalCost = 0;
+        for(int i = 0; i < n; i++){
+            if(s[i] == t[i]) continue;
+            int minCost = INF;
+            for(int c = 0; c < 26; c++){
+                if(dp[s[i]-'a'][c] < INF && dp[t[i]-'a'][c] < INF)
+                    minCost = min(minCost, dp[s[i]-'a'][c] + dp[t[i]-'a'][c]);
+            }
+            if(minCost == INF) return -1;
+            totalCost += minCost;
+        }
+        
+        return totalCost;
+    }
+};
