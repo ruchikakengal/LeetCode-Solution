@@ -1,0 +1,54 @@
+This is a simple in-place filtering problem using two pointers.
+
+Idea
+
+Use pointer k to track position for valid elements.
+
+Traverse the array:
+
+If nums[i] != val, place it at index k and increment k.
+
+Ignore elements equal to val.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+C++ Code
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int k = 0;
+        
+        for(int i = 0; i < nums.size(); i++){
+            if(nums[i] != val){
+                nums[k++] = nums[i];
+            }
+        }
+        
+        return k;
+    }
+};
+Example
+
+Input
+nums = [3,2,2,3], val = 3
+
+Process:
+
+Skip 3
+
+Keep 2, 2
+
+Array becomes:
+
+[2,2,_,_]
+
+Output
+k = 2
+
+💡 Alternate trick (faster when many vals present)
+Swap with last element:
+
+If nums[i] == val, replace it with last element and reduce size.
+
+Do not increment i in that case.
