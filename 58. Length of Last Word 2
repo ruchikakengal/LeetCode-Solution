@@ -1,0 +1,59 @@
+Idea
+
+Traverse the string from the end:
+
+Skip trailing spaces.
+Count characters until you hit a space.
+
+This avoids extra space and is optimal.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+
+
+
+C++ Code
+
+
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int i = s.size() - 1;
+        int len = 0;
+
+        while(i >= 0 && s[i] == ' ') i--;
+
+        while(i >= 0 && s[i] != ' '){
+            len++;
+            i--;
+        }
+
+        return len;
+    }
+};
+
+
+
+
+
+
+
+Example
+
+Input
+" fly me to the moon "
+
+Process:
+
+Skip spaces at end
+Start counting "moon"
+
+Output
+
+4
+Key Insight
+
+Always start from the end → avoids splitting string or extra memory.
