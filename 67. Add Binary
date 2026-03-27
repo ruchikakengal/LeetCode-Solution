@@ -1,0 +1,65 @@
+Idea
+
+Add the two binary strings from right to left (like manual addition).
+
+Keep a carry:
+
+Add digits from both strings + carry
+Compute:
+sum % 2 → current bit
+sum / 2 → new carry
+
+Finally, reverse the result.
+
+
+
+C++--------------
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int i = a.size() - 1;
+        int j = b.size() - 1;
+        int carry = 0;
+        string res = "";
+        
+        while(i >= 0 || j >= 0 || carry){
+            int sum = carry;
+            
+            if(i >= 0) sum += a[i--] - '0';
+            if(j >= 0) sum += b[j--] - '0';
+            
+            res += (sum % 2) + '0';
+            carry = sum / 2;
+        }
+        
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+
+
+------------------------
+
+Example
+
+Input
+a = "1010"
+b = "1011"
+
+Step-by-step:
+
+   1010
+ + 1011
+-------
+  10101
+
+Output:
+
+"10101"
+Key Insight
+
+Binary addition is just like decimal addition, but:
+
+Base is 2 instead of 10
+So carry happens when sum ≥ 2
