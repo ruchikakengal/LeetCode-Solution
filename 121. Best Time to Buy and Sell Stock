@@ -1,0 +1,39 @@
+C++//////
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        
+        int minPrice = INT_MAX;
+        int maxProfit = 0;
+        
+        for(int price : prices) {
+            
+            minPrice = min(minPrice, price);
+            maxProfit = max(maxProfit, price - minPrice);
+        }
+        
+        return maxProfit;
+    }
+};
+
+
+
+⏱ Complexity
+Time: O(n)
+Space: O(1)
+💡 Logic
+Keep track of the minimum price seen so far.
+For each day, calculate the profit if sold on that day.
+Update the maximum profit.
+
+Example:
+
+prices = [7,1,5,3,6,4]
+
+minPrice = 1
+maxProfit = 6 - 1 = 5
+
+Output:
+
+5
