@@ -1,0 +1,28 @@
+C++///
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        
+        int ans = 0;
+        
+        for(int num : nums) {
+            ans ^= num;
+        }
+        
+        return ans;
+    }
+};
+/////////////////////
+
+Complexity
+Time: O(n)
+Space: O(1)
+Logic
+
+Using XOR (^):
+
+a ^ a = 0
+a ^ 0 = a
+
+All duplicate numbers cancel out, leaving only the number that appears once.
