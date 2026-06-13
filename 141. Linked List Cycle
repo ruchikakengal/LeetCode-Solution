@@ -1,0 +1,32 @@
+C++/////
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+            
+            if(slow == fast)
+                return true;
+        }
+        
+        return false;
+    }
+};
+
+//////////////////////////////
+
+Approach: Floyd's Cycle Detection (Slow & Fast Pointer)
+
+Slow moves 1 step
+Fast moves 2 steps
+If they meet → cycle exists
+If fast reaches NULL → no cycle
+
+Time Complexity: O(n)
+Space Complexity: O(1)
